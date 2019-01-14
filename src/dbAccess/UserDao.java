@@ -27,7 +27,8 @@ public class UserDao {
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				
-				user = new User(rs.getInt("id"), rs.getString("username"), rs.getString("password"), rs.getString("isAdmin").charAt(0), rs.getString("isActive").charAt(0),
+				user = new User(rs.getInt("id"), rs.getString("username"), rs.getString("password"),
+						rs.getString("isAdmin").charAt(0), rs.getString("isActive").charAt(0),
 						rs.getString("secretQuestion"), rs.getString("secretAnswer"));
 			}
 			rs.close();
@@ -60,6 +61,7 @@ public class UserDao {
 				returnedUser.setSecretQuestion(rs.getString("secretQuestion"));
 				returnedUser.setSecretAnswer(rs.getString("secretAnswer"));
 			}
+			System.out.println(returnedUser.getPassword());
 			if (returnedUser.getId() == 0) {
 				System.out.println("Connection to database didn't succeed");
 			}
@@ -184,6 +186,30 @@ public class UserDao {
 			System.out.println(e);
 		}
 		return totalUsers;
+	}
+	
+	public static int updatePassword(User currentUser, String password) {
+		
+		int status = 0;
+		try {
+			Connection con = DB.getConnection();
+			PreparedStatement ps = con.prepareStatement("UPDATE users SET password = ? WHERE username = ? AND secretQuestion = ?");
+			ps.setString(1, password);
+			ps.setString(2, currentUser.getUsername());
+			ps.setString(3, currentUser.getSecretQuestion());
+			status = ps.executeUpdate();
+			if (status == 0) {
+				System.out.println("   Update didn't went through to database.");
+			} else {
+				System.out.println("   Database updated!");
+			}
+						
+			ps.close();
+			con.close();
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+		return status;
 	}
 	
 }

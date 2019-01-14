@@ -64,16 +64,15 @@ public class User {
 		this.secretAnswer = secretAnswer;
 		this.isActive = isActive;
 	}
-	public User(int id, String username, String password, char isAdmin, char active, String secretQuestion, String answer) {
+	public User(int id, String username, String password, char isAdmin, char active, String secretQuestion, String secretAnswer) {
 
 		this.id = id;
 		this.username = username;
 		this.password = password;
-		this.password = "";
 		this.isAdmin = isAdmin;
-		this.secretQuestion = secretQuestion;
-		this.secretAnswer = answer;
 		this.isActive = active;
+		this.secretQuestion = secretQuestion;
+		this.secretAnswer = secretAnswer;
 	}
 
 	/**
@@ -207,11 +206,25 @@ public class User {
 	public User activateUser() {
 
 		Scanner keyboard = new Scanner(System.in); 
+		String newPassword = "";
+		boolean changed = false;
 		if (this.getIsActive() == 'N') {
 			System.out.println("  Activation form:");
-			System.out.print("New Password: ");
-			this.setPassword(keyboard.nextLine());
-
+			
+			do {
+				
+				System.out.print("New Password: ");
+				newPassword = keyboard.nextLine();
+				
+				if ( validatePassword(newPassword) && !newPassword.equals(this.getPassword()) ) {
+					this.setPassword(newPassword);
+					changed = true;
+				} else {
+					System.out.println("   Your password must contain at least one lower case, one upper case,");
+					System.out.println("      one number and one special character!");
+					System.out.println("      Also must be different than the last one!");
+				}
+			} while(!changed); 
 			System.out.print("Enter a secret question: ");
 			this.setSecretQuestion(keyboard.nextLine());
 
@@ -294,8 +307,6 @@ public class User {
 		}		
 	}
 	
-	// separator
-
 	/**
 	 * It shows a table of current users and admins
 	 */
@@ -305,11 +316,58 @@ public class User {
 		System.out.println();
 		List<User> users = getUsers();
 		for (int i = 0; i < users.size(); i++) {
-			System.out.printf("%7s %15s %10s", users.get(i).getId(), users.get(i).getUsername(), users.get(i).getIsAdmin(), users.get(i).getIsActive());
+			System.out.printf("%7s %15s %10s %10s", users.get(i).getId(), users.get(i).getUsername(), users.get(i).getIsAdmin(), users.get(i).getIsActive());
 			System.out.println();
 		}	
 	}
+	
+	public void resetPassword() {
 		
+		Scanner keyboard = new Scanner(System.in);
+		String newPassword = "", username = "", answer;
+		int option = -1;
+		do {
+			System.out.print(">> Username: ");
+			username = keyboard.nextLine();
+						
+			System.out.println("Answer your Secret Question in order for you to reset your password!");
+			System.out.println(this.getSecretQuestion());
+			answer = keyboard.nextLine();
+			if (answer.equals(this.getSecretAnswer())) {
+				
+				System.out.print("  New password: ");
+				if (validatePassword(newPassword) && !newPassword.equals(this.getPassword())) {
+					this.setPassword(newPassword);
+				} else {
+					System.out.println("   Your password must contain at least one lower case, one upper case,");
+					System.out.println("      one number and one special character!");
+					System.out.println("      Also must be different than the last one!");
+				}
+			} else {
+				System.out.println("   Secret Question answered wrong!");
+				System.out.println("   1 - Try again\n");
+				System.out.println("   0 - Exit\n");
+				System.out.print(">> ");
+				option = keyboard.nextInt();
+				switch (option) {
+					case 1: {
+						break;
+					}
+					case 0: {
+						option = -1;
+						break;
+					}
+					default: {
+						option = 0;
+						System.out.println("  Enter a valid option!");
+						break;
+					}
+				}
+			}
+		} while(option != -1);
+
+	}
+	
 	public String getUsername() {
 		return username;
 	}
@@ -332,7 +390,7 @@ public class User {
 		return id;
 	}
 	public void setId(int id) {
-		id = id;
+		this.id = id;
 	}
 	public String getSecretQuestion() {
 		return secretQuestion;

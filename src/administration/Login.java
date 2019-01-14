@@ -2,6 +2,7 @@ package administration;
 
 import static dbAccess.UserDao.retrieveUser;
 import java.io.Console;
+import java.util.Currency;
 import java.util.Scanner;
 
 public class Login {
@@ -47,9 +48,37 @@ public class Login {
 			
 			if (tries >= 3) {
 				if (tries == 3) {
-										
-					System.out.println("   **Plese note, you can exit at anytime by pressing CTRL + Break!!**");
+					int option = -1;			
+					do {
+						System.out.println("  1 - Reset Password with Secret Question!");
+						System.out.println("  2 - Try again!\n");
+						System.out.println("  0 - Back\n");
+						System.out.print(">> ");
+						option = keyboard.nextInt();
+						
+						switch(option) {
+						case 1: {
+							user.resetPassword();
+							break;
+						}
+						case 2: {
+							tries = 0;
+							break;
+						}
+						case 0: {
+							option = -1;
+							break;
+						}
+						default: {
+							option = 0;
+							System.out.println("  Enter a valid option!");							
+							break;
+						}
+							
+						}
+					} while(option != -1);
 				}
+				keyboard.nextLine();
 				
 				if (tries == 4) {
 					System.out.println();

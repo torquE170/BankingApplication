@@ -35,8 +35,9 @@ public class AppMenu {
 							System.out.println();
 							System.out.println("  1 - Add User");
 							System.out.println("  2 - Reset User");
-							System.out.println("  3 - Remove User");							
-							System.out.println("  4 - Give / Take admin\n");
+							System.out.println("  3 - Remove User");						
+							System.out.println("  4 - Give / Take admin");
+							System.out.println("  5 - View Users\n");
 							System.out.println("  0 - Back\n");
 							System.out.print(">> ");
 							option = keyboard.nextInt();
@@ -57,6 +58,10 @@ public class AppMenu {
 							}
 							case 4: {
 								User.setAdmin();
+								break;
+							}
+							case 5: {
+								User.viewUsers();
 								break;
 							}
 							case 0: {
