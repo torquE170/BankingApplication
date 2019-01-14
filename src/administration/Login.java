@@ -52,10 +52,12 @@ public class Login {
 				}
 				
 				if (tries == 4) {
+					System.out.println();
 					return null;
 				}
 			}
 		}
+		System.out.println();
 		return user;
 	}
 

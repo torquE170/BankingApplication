@@ -9,6 +9,8 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.sound.midi.Synthesizer;
+
 import dbAccess.UserDao;
 
 public class User {
@@ -27,9 +29,9 @@ public class User {
 		this.username = "";
 		this.password = "";
 		this.isAdmin = ' ';
+		this.isActive = 'N';
 		this.secretQuestion = "";
 		this.secretAnswer = "";
-		this.isActive = 'N';		
 	}
 	public User(String username, String password, char isAdmin, char isActive) {
 
@@ -113,7 +115,7 @@ public class User {
 		Scanner keyboard = new Scanner(System.in);
 		//		Console console = System.console();
 
-		System.out.println(" New user:");
+		System.out.println(" New user from:");
 		System.out.print(">> Username: ");
 		user = keyboard.nextLine();
 		System.out.print(">> Password: ");
@@ -202,29 +204,39 @@ public class User {
 		}
 	}
 
-	public static void activateUser(User currentUser) {
+	public User activateUser() {
 
 		Scanner keyboard = new Scanner(System.in); 
-		if (currentUser.getIsActive() == 'N') {
+		if (this.getIsActive() == 'N') {
+			System.out.println("  Activation form:");
 			System.out.print("New Password: ");
-			currentUser.setPassword(keyboard.nextLine());
+			this.setPassword(keyboard.nextLine());
 
 			System.out.print("Enter a secret question: ");
-			currentUser.setSecretQuestion(keyboard.nextLine());
+			this.setSecretQuestion(keyboard.nextLine());
 
 			System.out.print("Enter your answer: ");
-			currentUser.setSecretAnswer(keyboard.nextLine());
+			this.setSecretAnswer(keyboard.nextLine());
 
-			currentUser.setIsActive('Y');
-			if (UserDao.updateUserStatus(currentUser.getUsername(), currentUser.getPassword(), currentUser.getIsActive(), currentUser.getSecretQuestion(), currentUser.getSecretAnswer()) == 1) {
-				System.out.println("  User " + currentUser.getUsername() + " has been activated!");
+			this.setIsActive('Y');
+			System.out.println();
+			if (UserDao.updateUserStatus(this.getUsername(), this.getPassword(), this.getIsActive(), this.getSecretQuestion(), this.getSecretAnswer()) == 1) {
+				System.out.println("  User " + this.getUsername() + " has been activated!");
 			} else {
 				System.out.println("  Activation failed!");
 			}
+			System.out.println();
 		}
+		return this;
 	}
 	
-	public static void resetUser(User currentUser) {
+	public static void resetUser() {
+		
+		Scanner keyboard = new Scanner(System.in);
+		System.out.println("   Reset User Form:");
+		System.out.print(">> Username: ");
+		String oneUsername = keyboard.nextLine();
+		User currentUser = UserDao.getUser(oneUsername);
 		
 		if (currentUser.getIsActive() == 'Y') {
 			
@@ -240,6 +252,48 @@ public class User {
 		}
 	}
 
+	/**
+	 * Gives or removes admin rights
+	 */
+	public static void setAdmin() {
+
+		Scanner keyboard = new Scanner(System.in);
+		
+		System.out.print(">> Username: ");
+		String user = keyboard.nextLine();
+		User currentUser = UserDao.getUser(user);
+		System.out.println("  Admin" + ((currentUser.getIsAdmin() == 'N')?" removal ":" ") + "form: ");
+		
+		System.out.print(">> Give admin: ");
+		currentUser.setIsAdmin(keyboard.nextLine().charAt(0));
+
+		int updated = update(user, currentUser.getIsAdmin());
+		if (updated == 0) {
+			System.out.println("Operatation failed!");
+		} else {
+			System.out.println( ((currentUser.getIsAdmin() == 'Y')?"User ":((currentUser.getIsAdmin() == 'N')?"Admin ":"") ) + user + " now has " + 
+					((currentUser.getIsAdmin() == 'Y')?"admin":((currentUser.getIsAdmin() == 'N')?"user":"") ) + " rights!");
+		}
+	}
+	
+	/**
+	 * Deletes a user
+	 */
+	public static void deleteUser() {
+
+		Scanner keyboard = new Scanner(System.in);
+		System.out.println("  Remove form:");
+		System.out.print(">> Username: ");
+		String user = keyboard.nextLine();
+
+		int deleted = remove(user);
+		if (deleted == 0) {
+			System.out.println("Operatation failed!");
+		} else {
+			System.out.println("User " + user + " has been deleted!");
+		}		
+	}
+	
 	// separator
 
 	/**
@@ -247,64 +301,15 @@ public class User {
 	 */
 	public static void viewUsers() {
 
-		System.out.printf("%7s %15s %10s", "ID", "Username", "isAdmin");
+		System.out.printf("%7s %15s %10s %10s", "ID", "Username", "isAdmin", "isActive");
 		System.out.println();
 		List<User> users = getUsers();
 		for (int i = 0; i < users.size(); i++) {
-			System.out.printf("%7s %15s %10s", users.get(i).getId(), users.get(i).getUsername(), users.get(i).getIsAdmin());
+			System.out.printf("%7s %15s %10s", users.get(i).getId(), users.get(i).getUsername(), users.get(i).getIsAdmin(), users.get(i).getIsActive());
 			System.out.println();
 		}	
 	}
-
-	/**
-	 * Gives or removes admin rights
-	 */
-	public void setAdmin(char isAdmin) {
-
-		Scanner keyboard = new Scanner(System.in);
-		System.out.println("  Admin" + ((isAdmin == 'N')?" removal ":" ") + "form: ");
-		System.out.print(">> ID: ");
-		int id = keyboard.nextInt();
-		keyboard.nextLine();
-		System.out.print(">> Username: ");
-		String user = keyboard.nextLine();
-
-		int updated = update(id, user, isAdmin);
-
-		if (updated == 0) {
-
-			System.out.println("Operatation failed!");
-		} else {
-			System.out.println( ((isAdmin == 'Y')?"User ":((isAdmin == 'N')?"Admin ":"") ) + user + " now has " + 
-					((isAdmin == 'Y')?"admin":((isAdmin == 'N')?"user":"") ) + " rights!");
-
-		}
-
-	}
-
-	/**
-	 * Deletes a user
-	 */
-	public static void deleteUser() {
-
-		Scanner keyboard = new Scanner(System.in);
-		System.out.println("|  Remove form:                                                                     |");
-		System.out.print(">> ID: ");
-		int id = keyboard.nextInt();
-		keyboard.nextLine();
-		System.out.print(">> Username: ");
-		String user = keyboard.nextLine();
-
-		int deleted = remove(id, user);
-		if (deleted == 0) {
-
-			System.out.println("Operatation failed!");
-		} else {
-			System.out.println("User " + user + " has been deleted!");
-
-		}		
-	}
-
+		
 	public String getUsername() {
 		return username;
 	}
@@ -326,8 +331,8 @@ public class User {
 	public int getId() {
 		return id;
 	}
-	public void setId(int iD) {
-		id = iD;
+	public void setId(int id) {
+		id = id;
 	}
 	public String getSecretQuestion() {
 		return secretQuestion;

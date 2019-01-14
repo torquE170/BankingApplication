@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.List;
 
 import administration.User;
@@ -26,7 +27,8 @@ public class UserDao {
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				
-				user = new User(rs.getInt("id"), rs.getString("username"), rs.getString("password"), rs.getString("isAdmin").charAt(0), rs.getString("isActive").charAt(0));
+				user = new User(rs.getInt("id"), rs.getString("username"), rs.getString("password"), rs.getString("isAdmin").charAt(0), rs.getString("isActive").charAt(0),
+						rs.getString("secretQuestion"), rs.getString("secretAnswer"));
 			}
 			rs.close();
 			ps.close();
@@ -35,6 +37,39 @@ public class UserDao {
 			System.out.println(e);
 		}
 		return user;
+	}
+	
+	/**
+	 * Fetches a user from database for processing
+	 * @param username
+	 * @return Full details for a user
+	 */
+	public static User getUser(String username) {
+		User returnedUser = new User();
+		try {
+			Connection con = DB.getConnection();
+			PreparedStatement ps = con.prepareStatement("SELECT * FROM users WHERE username = ?");
+			ps.setString(1, username);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				returnedUser.setId(rs.getInt("id"));
+				returnedUser.setUsername(rs.getString("username"));
+				returnedUser.setPassword(rs.getString("password"));
+				returnedUser.setIsAdmin(rs.getString("isAdmin").charAt(0));
+				returnedUser.setIsActive(rs.getString("isActive").charAt(0));
+				returnedUser.setSecretQuestion(rs.getString("secretQuestion"));
+				returnedUser.setSecretAnswer(rs.getString("secretAnswer"));
+			}
+			if (returnedUser.getId() == 0) {
+				System.out.println("Connection to database didn't succeed");
+			}
+			rs.close();
+			ps.close();
+			con.close();
+		} catch(SQLException e) {
+			System.out.println(e);
+		}
+		return returnedUser;
 	}
 
 	/**
@@ -83,6 +118,45 @@ public class UserDao {
 		return status;
 	}
 	
+	/**
+	 * Updates isAdmin column in database.
+	 */
+	public static int update(String username, char isAdmin) {
+		int status = 0;
+		try {
+			Connection con = DB.getConnection();
+			PreparedStatement ps = con.prepareStatement("UPDATE users SET isAdmin = ? WHERE username = ?");
+			ps.setString(1, String.valueOf(isAdmin));
+			ps.setString(2, username);
+			status = ps.executeUpdate();
+			
+			ps.close();
+			con.close();
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+		return status;
+	}
+	
+	/**
+	 * Removes specific entry from database.
+	 */
+	public static int remove(String username) {
+		
+		int status = 0;
+		try {
+			Connection con = DB.getConnection();
+			PreparedStatement ps = con.prepareStatement("DELETE FROM users WHERE username = ?");
+			ps.setString(1, username);
+			status = ps.executeUpdate();
+			
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+		return status;
+	}
+	
 	// separator
 	
 	/**
@@ -98,7 +172,7 @@ public class UserDao {
 			while (rs.next()) {
 				int id = rs.getInt("ID");
 				String username = rs.getString("username");
-				char isAdmin = rs.getString("is_admin").charAt(0);
+				char isAdmin = rs.getString("isAdmin").charAt(0);
 				char isActive = rs.getString("isActive").charAt(0);
 				User newUser = new User(id, username, isAdmin, isActive);
 				totalUsers.add(newUser);
@@ -110,45 +184,6 @@ public class UserDao {
 			System.out.println(e);
 		}
 		return totalUsers;
-	}
-	
-	/**
-	 * Is a update for is_admin column in database.
-	 */
-	public static int update(int id, String username, char isAdmin) {
-		int status = 0;
-		try {
-			Connection con = DB.getConnection();
-			PreparedStatement ps = con.prepareStatement("UPDATE users SET is_admin = ? WHERE ID = ? AND username = ?");
-			ps.setString(1, String.valueOf(isAdmin));
-			ps.setInt(2, id);
-			ps.setString(3, username);
-			status = ps.executeUpdate();
-			ps.close();
-			con.close();
-		} catch (SQLException e) {
-			System.out.println(e);
-		}
-		return status;
-	}
-	
-	/**
-	 * Removes specific entry from database.
-	 */
-	public static int remove(int id, String username) {
-		
-		int status = 0;
-		try {
-			Connection con = DB.getConnection();
-			PreparedStatement ps = con.prepareStatement("DELETE FROM users WHERE ID = ? AND username = ?");
-			ps.setInt(1, id);
-			ps.setString(2, username);
-			status = ps.executeUpdate();
-			ps.close();
-		} catch (SQLException e) {
-			System.out.println(e);
-		}
-		return status;
 	}
 	
 }
