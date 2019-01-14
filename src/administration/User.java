@@ -321,23 +321,28 @@ public class User {
 		}	
 	}
 	
-	public void resetPassword() {
+	public static void resetPassword() {
 		
 		Scanner keyboard = new Scanner(System.in);
 		String newPassword = "", username = "", answer;
+		User currentUser = new User();
 		int option = -1;
 		do {
 			System.out.print(">> Username: ");
 			username = keyboard.nextLine();
+			currentUser = UserDao.getUser(username);
 						
 			System.out.println("Answer your Secret Question in order for you to reset your password!");
-			System.out.println(this.getSecretQuestion());
-			answer = keyboard.nextLine();
-			if (answer.equals(this.getSecretAnswer())) {
+			System.out.println(currentUser.getSecretQuestion());
+			answer = keyboard.nextLine();	
+			
+			if (answer.equals(currentUser.getSecretAnswer())) {
+				
 				
 				System.out.print("  New password: ");
-				if (validatePassword(newPassword) && !newPassword.equals(this.getPassword())) {
-					this.setPassword(newPassword);
+				newPassword = keyboard.nextLine();
+				if (validatePassword(newPassword) && !newPassword.equals(currentUser.getPassword())) {
+					currentUser.setPassword(newPassword);
 				} else {
 					System.out.println("   Your password must contain at least one lower case, one upper case,");
 					System.out.println("      one number and one special character!");
@@ -365,6 +370,7 @@ public class User {
 				}
 			}
 		} while(option != -1);
+		UserDao.updatePassword(currentUser, newPassword);
 
 	}
 	

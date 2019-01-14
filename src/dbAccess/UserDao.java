@@ -61,7 +61,7 @@ public class UserDao {
 				returnedUser.setSecretQuestion(rs.getString("secretQuestion"));
 				returnedUser.setSecretAnswer(rs.getString("secretAnswer"));
 			}
-			System.out.println(returnedUser.getPassword());
+			
 			if (returnedUser.getId() == 0) {
 				System.out.println("Connection to database didn't succeed");
 			}

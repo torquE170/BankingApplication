@@ -58,7 +58,7 @@ public class Login {
 						
 						switch(option) {
 						case 1: {
-							user.resetPassword();
+							User.resetPassword();
 							break;
 						}
 						case 2: {
