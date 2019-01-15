@@ -4,13 +4,11 @@ import static dbAccess.UserDao.getUsers;
 import static dbAccess.UserDao.remove;
 import static dbAccess.UserDao.update;
 import java.io.Console;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.sound.midi.Synthesizer;
-
 import dbAccess.UserDao;
 
 public class User {
@@ -202,11 +200,52 @@ public class User {
 			return false;
 		}
 	}
+	
+	/**
+	 * Verifies if a secretQuestion complies with standard
+	 * @param secretQuestion
+	 * @return true if question has more than 3 words, at least a upper case and a lower case.
+	 */
+	private static boolean validateQuestion(String secretQuestion) {
+		
+		if (wordCounter(secretQuestion) >= 3) {
+			Pattern UpperCase = Pattern.compile("[A-Z]");
+			Pattern LowerCase = Pattern.compile("[a-z]");
+			Pattern digit = Pattern.compile("[0-9]*");
 
+			Matcher hasUpperCase = UpperCase.matcher(secretQuestion);
+			Matcher hasLowerCase = LowerCase.matcher(secretQuestion);
+			Matcher hasDigit = digit.matcher(secretQuestion);
+
+			return hasUpperCase.find() && hasLowerCase.find() && hasDigit.find();
+
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Counts words in one String line
+	 * @param line
+	 * @return Number of words in one String Line
+	 */
+	private static int wordCounter(String line) {
+		List<String> words = new ArrayList<String>();
+		String[] tempWords = line.split("\\W+");
+		for (int i = 0; i < tempWords.length; i++) {
+			words.add(tempWords[i]);
+		}
+		return words.size();
+	}
+
+	/**
+	 * Sets up form for new User with password, secretQuestion and secretAnswer gathering
+	 * @return a User object with updated information
+	 */
 	public User activateUser() {
 
 		Scanner keyboard = new Scanner(System.in); 
-		String newPassword = "";
+		String newPassword = "", newQuestion;
 		boolean changed = false;
 		if (this.getIsActive() == 'N') {
 			System.out.println("  Activation form:");
@@ -224,10 +263,22 @@ public class User {
 					System.out.println("      one number and one special character!");
 					System.out.println("      Also must be different than the last one!\n");
 				}
+			} while(!changed);
+			changed = false;
+			
+			do {
+				
+				System.out.print("Enter a secret question: ");
+				newQuestion = keyboard.nextLine();
+				
+				if ( validateQuestion(newQuestion)) {
+					this.setSecretQuestion(newQuestion);
+					changed = true;
+				} else {
+					System.out.println("   Your question must have at least 3 words, must contain at least one upper,");
+					System.out.println("        and lower case and no numbers!\n");
+				}
 			} while(!changed); 
-			System.out.print("Enter a secret question: ");
-			this.setSecretQuestion(keyboard.nextLine());
-
 			System.out.print("Enter your answer: ");
 			this.setSecretAnswer(keyboard.nextLine());
 
@@ -325,6 +376,10 @@ public class User {
 		System.out.println();
 	}
 	
+	/**
+	 * Gathers Variables and calls required Methods in order for
+	 * 		a active account to have it's password reset.
+	 */
 	public static void resetPassword() {
 		
 		Scanner keyboard = new Scanner(System.in);
@@ -360,7 +415,7 @@ public class User {
 					System.out.println("      Also must be different than the last one!");
 				}
 			} else {
-				System.out.println("   Secret Question answered wrong!");
+				System.out.println("   Secret Question answered wrong!\n");
 				System.out.println("   1 - Try again\n");
 				System.out.println("   0 - Exit\n");
 				System.out.print(">> ");
@@ -386,7 +441,7 @@ public class User {
 				}
 				keyboard.nextLine();
 			}
-		} while(!answerSuccess);
+		} while(!answerSuccess || !passwordPass);
 		if (answerSuccess && passwordPass) {
 			UserDao.updatePassword(currentUser);
 		}

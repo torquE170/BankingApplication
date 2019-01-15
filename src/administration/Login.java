@@ -60,6 +60,7 @@ public class Login {
 						switch(option) {
 						case 1: {
 							User.resetPassword();
+							tries = 0;
 							option = -1;
 							break;
 						}
