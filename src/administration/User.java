@@ -100,8 +100,8 @@ public class User {
 		if (newUser.validateUser()) {
 
 			newUser.registerUser();
-		}	
-
+		}
+		System.out.println();
 	}
 
 	/**
@@ -222,7 +222,7 @@ public class User {
 				} else {
 					System.out.println("   Your password must contain at least one lower case, one upper case,");
 					System.out.println("      one number and one special character!");
-					System.out.println("      Also must be different than the last one!");
+					System.out.println("      Also must be different than the last one!\n");
 				}
 			} while(!changed); 
 			System.out.print("Enter a secret question: ");
@@ -253,7 +253,7 @@ public class User {
 		
 		if (currentUser.getIsActive() == 'Y') {
 			
-			currentUser.setPassword("Monday14");
+			currentUser.setPassword("Mond@y14");
 			currentUser.setIsActive('N');
 			currentUser.setSecretQuestion("");
 			currentUser.setSecretAnswer("");
@@ -263,6 +263,7 @@ public class User {
 				System.out.println("  Deactivation failed!");
 			}
 		}
+		System.out.println();
 	}
 
 	/**
@@ -287,6 +288,7 @@ public class User {
 			System.out.println( ((currentUser.getIsAdmin() == 'Y')?"User ":((currentUser.getIsAdmin() == 'N')?"Admin ":"") ) + user + " now has " + 
 					((currentUser.getIsAdmin() == 'Y')?"admin":((currentUser.getIsAdmin() == 'N')?"user":"") ) + " rights!");
 		}
+		System.out.println();
 	}
 	
 	/**
@@ -304,7 +306,8 @@ public class User {
 			System.out.println("Operatation failed!");
 		} else {
 			System.out.println("User " + user + " has been deleted!");
-		}		
+		}
+		System.out.println();
 	}
 	
 	/**
@@ -318,7 +321,8 @@ public class User {
 		for (int i = 0; i < users.size(); i++) {
 			System.out.printf("%7s %15s %10s %10s", users.get(i).getId(), users.get(i).getUsername(), users.get(i).getIsAdmin(), users.get(i).getIsActive());
 			System.out.println();
-		}	
+		}
+		System.out.println();
 	}
 	
 	public static void resetPassword() {
@@ -327,10 +331,15 @@ public class User {
 		String newPassword = "", username = "", answer;
 		User currentUser = new User();
 		int option = -1;
+		boolean answerSuccess = false, passwordPass = false;
 		do {
 			System.out.print(">> Username: ");
 			username = keyboard.nextLine();
 			currentUser = UserDao.getUser(username);
+			if (currentUser.getSecretQuestion().equals("") || currentUser.getSecretQuestion() == null) {
+				System.out.println("There is no Secret Question in database.");
+				break;
+			}
 						
 			System.out.println("Answer your Secret Question in order for you to reset your password!");
 			System.out.println(currentUser.getSecretQuestion());
@@ -338,10 +347,12 @@ public class User {
 			
 			if (answer.equals(currentUser.getSecretAnswer())) {
 				
-				
+				answerSuccess = true;
+				System.out.println("  Secret Question Password recovery form:");
 				System.out.print("  New password: ");
 				newPassword = keyboard.nextLine();
 				if (validatePassword(newPassword) && !newPassword.equals(currentUser.getPassword())) {
+					passwordPass = true;
 					currentUser.setPassword(newPassword);
 				} else {
 					System.out.println("   Your password must contain at least one lower case, one upper case,");
@@ -354,12 +365,14 @@ public class User {
 				System.out.println("   0 - Exit\n");
 				System.out.print(">> ");
 				option = keyboard.nextInt();
+				boolean exit = false;
 				switch (option) {
 					case 1: {
 						break;
 					}
 					case 0: {
 						option = -1;
+						exit = true;
 						break;
 					}
 					default: {
@@ -368,9 +381,15 @@ public class User {
 						break;
 					}
 				}
+				if (exit) {
+					break;
+				}
+				keyboard.nextLine();
 			}
-		} while(option != -1);
-		UserDao.updatePassword(currentUser, newPassword);
+		} while(!answerSuccess);
+		if (answerSuccess && passwordPass) {
+			UserDao.updatePassword(currentUser);
+		}
 
 	}
 	

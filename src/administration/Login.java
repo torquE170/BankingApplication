@@ -1,9 +1,8 @@
 package administration;
 
 import static dbAccess.UserDao.retrieveUser;
-import java.io.Console;
-import java.util.Currency;
 import java.util.Scanner;
+import java.io.Console;
 
 public class Login {
 
@@ -24,10 +23,10 @@ public class Login {
 			String username1 = keyboard.nextLine();
 
 			System.out.print(">> Password: ");
+			String password1 = keyboard.nextLine();
 //			Console console = System.console();
 //			char[] text = console.readPassword();
 //			String password1 = new String(text);
-			String password1 = keyboard.nextLine();
 
 			user = retrieveUser(username1, password1);
 
@@ -47,9 +46,11 @@ public class Login {
 			}
 			
 			if (tries >= 3) {
+				
 				if (tries == 3) {
 					int option = -1;			
 					do {
+						System.out.println();
 						System.out.println("  1 - Reset Password with Secret Question!");
 						System.out.println("  2 - Try again!\n");
 						System.out.println("  0 - Back\n");
@@ -59,14 +60,17 @@ public class Login {
 						switch(option) {
 						case 1: {
 							User.resetPassword();
+							option = -1;
 							break;
 						}
 						case 2: {
 							tries = 0;
+							option = -1;
 							break;
 						}
 						case 0: {
-							option = -1;
+							tries = 4;
+							option = -1;							
 							break;
 						}
 						default: {
@@ -77,8 +81,9 @@ public class Login {
 							
 						}
 					} while(option != -1);
-				}
-				keyboard.nextLine();
+					keyboard.nextLine();
+				}			
+				
 				
 				if (tries == 4) {
 					System.out.println();

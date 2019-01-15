@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Currency;
 import java.util.List;
 
 import administration.User;
@@ -14,7 +13,10 @@ import administration.User;
 public class UserDao {
 
 	/**
-	 * Returns a User. Useful for new users.
+	 * Useful for log in process.
+	 * @param username
+	 * @param password
+	 * @return Returns a User.
 	 */
 	public static User retrieveUser(String username, String password) {
 		
@@ -27,9 +29,13 @@ public class UserDao {
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				
-				user = new User(rs.getInt("id"), rs.getString("username"), rs.getString("password"),
-						rs.getString("isAdmin").charAt(0), rs.getString("isActive").charAt(0),
-						rs.getString("secretQuestion"), rs.getString("secretAnswer"));
+				user.setId(rs.getInt("id"));
+				user.setUsername(rs.getString("username"));
+				user.setPassword(rs.getString("password"));
+				user.setIsAdmin(rs.getString("isAdmin").charAt(0));
+				user.setIsActive(rs.getString("isActive").charAt(0));
+				user.setSecretQuestion(rs.getString("secretQuestion"));
+				user.setSecretAnswer(rs.getString("secretAnswer"));
 			}
 			rs.close();
 			ps.close();
@@ -188,13 +194,13 @@ public class UserDao {
 		return totalUsers;
 	}
 	
-	public static int updatePassword(User currentUser, String password) {
+	public static int updatePassword(User currentUser) {
 		
 		int status = 0;
 		try {
 			Connection con = DB.getConnection();
 			PreparedStatement ps = con.prepareStatement("UPDATE users SET password = ? WHERE username = ? AND secretQuestion = ?");
-			ps.setString(1, password);
+			ps.setString(1, currentUser.getPassword());
 			ps.setString(2, currentUser.getUsername());
 			ps.setString(3, currentUser.getSecretQuestion());
 			status = ps.executeUpdate();

@@ -17,6 +17,7 @@ public class AppMenu {
 //		clearScreen();
 		System.out.println("  *** Banking Application, please do no proced without proper access credentials ***\n");
 		do {
+			System.out.println(" --- Login Menu ---\n");
 			System.out.println("  1 - Login\n");
 			System.out.println("  0 - Exit\n");
 			System.out.print(">> ");
@@ -32,7 +33,7 @@ public class AppMenu {
 					if (currentUser.getIsAdmin() == 'Y') {
 						// Admin Menu
 						do {
-							System.out.println();
+							
 							System.out.println("  1 - Add User");
 							System.out.println("  2 - Reset User");
 							System.out.println("  3 - Remove User");						
@@ -62,6 +63,7 @@ public class AppMenu {
 							}
 							case 5: {
 								User.viewUsers();
+								promtEnterKey();
 								break;
 							}
 							case 0: {
@@ -127,6 +129,17 @@ public class AppMenu {
 		} catch (InterruptedException e) {
 			System.out.println(e);
 		}
+	}
+	
+	public static void promtEnterKey() {
+		Scanner keyboard = new Scanner(System.in);
+		try {
+			System.out.print("  --- Press Enter to continue ---");
+			keyboard.nextLine();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		System.out.println();
 	}
 
 }
