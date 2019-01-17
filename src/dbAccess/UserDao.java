@@ -218,4 +218,56 @@ public class UserDao {
 		return status;
 	}
 	
+	/**
+	 * Checks for a usernames uniqueness
+	 * @param username
+	 * @return true for unique username, false for finding another alike
+	 */
+	public static boolean uniqueUsername(String username) {
+		
+		boolean isUnique = true;
+		String name = "";
+		try {
+			Connection con = DB.getConnection();
+			PreparedStatement ps = con.prepareStatement("SELECT * FROM users WHERE username = ?");
+			ps.setString(1, username);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				
+				name = rs.getString("username");
+			}
+			if (name.equals(username)) {
+				isUnique = false;
+			}
+			
+			rs.close();
+			ps.close();
+			con.close();
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+		return isUnique;
+	}
+	
+	public static int adminCount() {
+		
+		int counter = 0;
+		try {
+			  Connection con = DB.getConnection();
+			  PreparedStatement ps = con.prepareStatement("SELECT COUNT(isAdmin) FROM users WHERE isAdmin = 'Y'");
+			  ResultSet rs = ps.executeQuery();
+			  while (rs.next()) {
+				  
+				  counter = rs.getInt("COUNT(isAdmin)");
+			  }
+			  
+			  rs.close();
+			  ps.close();
+			  con.close();
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+		return counter;
+	}
+	
 }

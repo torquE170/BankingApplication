@@ -46,7 +46,7 @@ public class User {
 		this.isActive = isActive;
 	}
 	public User(int id, String username, String password, char isAdmin, char isActive) {
-		
+
 		this.id = id;
 		this.username = username;
 		this.password = password;
@@ -115,6 +115,8 @@ public class User {
 		System.out.println(" New user from:");
 		System.out.print(">> Username: ");
 		user = keyboard.nextLine();
+		user = user.trim();
+		
 		System.out.print(">> Password: ");
 		//		char[] text = console.readPassword();
 		//		pass = new String(text);
@@ -132,17 +134,26 @@ public class User {
 	 */
 	private boolean validateUser() {
 		boolean ok = false;
+		boolean uniqueCheck = false;
 
-		// Username check
-		if ( validateUsername(this.getUsername()) ) {
-			// Password check
-			if ( validatePassword(this.getPassword()) ) {
+		// unique check
+		if ( UserDao.uniqueUsername(this.getUsername())) {
+			
+			uniqueCheck = true;
+			// Username check
+			if ( validateUsername(this.getUsername()) ) {
+				// Password check
+				if ( validatePassword(this.getPassword()) ) {
 
-				ok = true;
+					ok = true;
+				}
 			}
+		} else {
+			
+			System.out.println("\n  Choose another username!\n");
 		}
 
-		if (!ok) {
+		if (!ok && uniqueCheck) {
 			System.out.println("\n  Your login credentials don't meet the minimum requirements!\n");
 			System.out.println("  Your username must be at least 5 characters long and have at least one");
 			System.out.println("      lower case and one upper case!");
@@ -200,14 +211,14 @@ public class User {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Verifies if a secretQuestion complies with standard
 	 * @param secretQuestion
 	 * @return true if question has more than 3 words, at least a upper case and a lower case.
 	 */
 	private static boolean validateQuestion(String secretQuestion) {
-		
+
 		if (wordCounter(secretQuestion) >= 3) {
 			Pattern UpperCase = Pattern.compile("[A-Z]");
 			Pattern LowerCase = Pattern.compile("[a-z]");
@@ -223,7 +234,7 @@ public class User {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Counts words in one String line
 	 * @param line
@@ -249,12 +260,12 @@ public class User {
 		boolean changed = false;
 		if (this.getIsActive() == 'N') {
 			System.out.println("  Activation form:");
-			
+
 			do {
-				
+
 				System.out.print("New Password: ");
 				newPassword = keyboard.nextLine();
-				
+
 				if ( validatePassword(newPassword) && !newPassword.equals(this.getPassword()) ) {
 					this.setPassword(newPassword);
 					changed = true;
@@ -265,12 +276,12 @@ public class User {
 				}
 			} while(!changed);
 			changed = false;
-			
+
 			do {
-				
+
 				System.out.print("Enter a secret question: ");
 				newQuestion = keyboard.nextLine();
-				
+
 				if ( validateQuestion(newQuestion)) {
 					this.setSecretQuestion(newQuestion);
 					changed = true;
@@ -293,17 +304,17 @@ public class User {
 		}
 		return this;
 	}
-	
+
 	public static void resetUser() {
-		
+
 		Scanner keyboard = new Scanner(System.in);
 		System.out.println("   Reset User Form:");
 		System.out.print(">> Username: ");
 		String oneUsername = keyboard.nextLine();
 		User currentUser = UserDao.getUser(oneUsername);
-		
+
 		if (currentUser.getIsActive() == 'Y') {
-			
+
 			currentUser.setPassword("Mond@y14");
 			currentUser.setIsActive('N');
 			currentUser.setSecretQuestion("");
@@ -323,15 +334,25 @@ public class User {
 	public static void setAdmin() {
 
 		Scanner keyboard = new Scanner(System.in);
-		
+
 		System.out.print(">> Username: ");
 		String user = keyboard.nextLine();
 		User currentUser = UserDao.getUser(user);
+		char setAdmin = ' ';
 		System.out.println("  Admin" + ((currentUser.getIsAdmin() == 'N')?" removal ":" ") + "form: ");
-		
-		System.out.print(">> Give admin: ");
-		currentUser.setIsAdmin(keyboard.nextLine().charAt(0));
 
+		System.out.print(">> Give admin: ");
+		setAdmin = keyboard.nextLine().charAt(0);
+		
+		if (setAdmin == 'N') {
+			if ( UserDao.adminCount() > 1) {
+				currentUser.setIsAdmin(setAdmin);
+			} else {
+				System.out.println("   You cannot take rights from last Admin!");
+			}
+		}
+
+		
 		int updated = update(user, currentUser.getIsAdmin());
 		if (updated == 0) {
 			System.out.println("Operatation failed!");
@@ -341,7 +362,7 @@ public class User {
 		}
 		System.out.println();
 	}
-	
+
 	/**
 	 * Deletes a user
 	 */
@@ -352,7 +373,14 @@ public class User {
 		System.out.print(">> Username: ");
 		String user = keyboard.nextLine();
 
-		int deleted = remove(user);
+		int deleted = 0;
+		if ( UserDao.adminCount() > 1) {
+			
+			deleted = remove(user);
+		} else {
+			
+			System.out.println("\n  You cannot delete last admin!\n");
+		}
 		if (deleted == 0) {
 			System.out.println("Operatation failed!");
 		} else {
@@ -360,7 +388,7 @@ public class User {
 		}
 		System.out.println();
 	}
-	
+
 	/**
 	 * It shows a table of current users and admins
 	 */
@@ -375,13 +403,13 @@ public class User {
 		}
 		System.out.println();
 	}
-	
+
 	/**
 	 * Gathers Variables and calls required Methods in order for
 	 * 		a active account to have it's password reset.
 	 */
 	public static void resetPassword() {
-		
+
 		Scanner keyboard = new Scanner(System.in);
 		String newPassword = "", username = "", answer;
 		User currentUser = new User();
@@ -395,13 +423,13 @@ public class User {
 				System.out.println("There is no Secret Question in database.");
 				break;
 			}
-						
+
 			System.out.println("Answer your Secret Question in order for you to reset your password!");
 			System.out.println(currentUser.getSecretQuestion());
 			answer = keyboard.nextLine();	
-			
+
 			if (answer.equals(currentUser.getSecretAnswer())) {
-				
+
 				answerSuccess = true;
 				System.out.println("  Secret Question Password recovery form:");
 				System.out.print("  New password: ");
@@ -422,19 +450,19 @@ public class User {
 				option = keyboard.nextInt();
 				boolean exit = false;
 				switch (option) {
-					case 1: {
-						break;
-					}
-					case 0: {
-						option = -1;
-						exit = true;
-						break;
-					}
-					default: {
-						option = 0;
-						System.out.println("  Enter a valid option!");
-						break;
-					}
+				case 1: {
+					break;
+				}
+				case 0: {
+					option = -1;
+					exit = true;
+					break;
+				}
+				default: {
+					option = 0;
+					System.out.println("  Enter a valid option!");
+					break;
+				}
 				}
 				if (exit) {
 					break;
@@ -447,7 +475,7 @@ public class User {
 		}
 
 	}
-	
+
 	public String getUsername() {
 		return username;
 	}

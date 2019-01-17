@@ -37,7 +37,7 @@ public class Login {
 				loginSuccess = true;
 			} else if (user.getIsAdmin() == 'N') {
 
-				System.out.println("  Hello User!");
+				System.out.printf("  Hello %s!\n", user.getUsername());
 				loginSuccess = true;
 			} else {
 
