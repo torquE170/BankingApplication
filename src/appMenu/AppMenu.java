@@ -6,6 +6,7 @@ import java.util.Scanner;
 import administration.Login;
 import administration.User;
 import dbAccess.UserDao;
+import resources.Customer;
 
 public class AppMenu {
 
@@ -63,7 +64,7 @@ public class AppMenu {
 							}
 							case 5: {
 								User.viewUsers();
-								promtEnterKey();
+								promptEnterKey();
 								break;
 							}
 							case 0: {
@@ -85,12 +86,17 @@ public class AppMenu {
 						if (currentUser.getIsActive() == 'Y') {
 							// User Menu
 							do {
-								System.out.println("      User Menu\n");
+								System.out.println("      Banking Menu\n");
+								System.out.println("  1 - Add a Customer\n");
 								System.out.println("  0 - Back\n");								
 								System.out.print(">> ");
 								option = keyboard.nextInt();
 								System.out.println();
 								switch(option) {
+								case 1: {
+									Customer.addCustomer();
+									break;
+								}
 								case 0: {
 									option = -3;
 									break;
@@ -131,7 +137,7 @@ public class AppMenu {
 		}
 	}
 	
-	public static void promtEnterKey() {
+	public static void promptEnterKey() {
 		Scanner keyboard = new Scanner(System.in);
 		try {
 			System.out.print("  --- Press Enter to continue ---");

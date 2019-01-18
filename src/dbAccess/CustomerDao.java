@@ -14,9 +14,19 @@ public class CustomerDao {
 		try {
 			
 			Connection con = DB.getConnection();
-			PreparedStatement ps = con.prepareStatement("INSERT INTO customers () VALUES()");
+			PreparedStatement ps = con.prepareStatement("INSERT INTO customers (customerId, firstName, lastName, DOB, adress) VALUES(?, ?, ?, ?, ?)");
+			ps.setInt(1, newCustomer.getCustomerId());
+			ps.setString(2, newCustomer.getFirstName());
+			ps.setString(3, newCustomer.getLastName());
+			ps.setString(4, newCustomer.getDOB());
+			ps.setString(5, newCustomer.getAdress().getText());
+			status = ps.executeUpdate();
+			
+			ps.close();
+			con.close();
 		} catch(SQLException e) {
 			System.out.println(e);
 		}
+		return status;
 	}
 }
