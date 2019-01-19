@@ -1,51 +1,68 @@
 package resources;
 
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import dbAccess.CustomerDao;
 
 public class Customer {
 
 	private int id;
-	private int customerId;
+	private String customerId;
 	private String firstName;
 	private String lastName;
-	private String DOB;
-	private Adress adress;
+	private String dateOfBirth;
+	private Address address;
 	
 	public Customer() {
 		
 		this.id = 0;
-		this.customerId = 0;
+		this.customerId = "";
 		this.firstName = "";
 		this.lastName = "";
-		this.DOB = "";
-		this.adress = new Adress();
+		this.dateOfBirth = "";
+		this.address = new Address();
 	}
-	public Customer(int id, int customerId, String firstName, String lastName, String dOB, Adress adress) {
+	public Customer(String customerId, String firstName, String lastName, String dateOfBirth, Address address) {
+		
+		this.id = 0;
+		this.customerId = customerId;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.dateOfBirth = dateOfBirth;
+		this.address = address;
+	}
+	public Customer(int id, String customerId, String firstName, String lastName, String dateOfBirth, Address address) {
 		
 		this.id = id;
 		this.customerId = customerId;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.DOB = dOB;
-		this.adress = adress;
+		this.dateOfBirth = dateOfBirth;
+		this.address = address;
 	}
 	
+	/**
+	 * Calls all methods in order for a valid Customer registration
+	 */
 	public static void addCustomer() {
 		
 		Customer newCustomer = enterCustomerData();
-		CustomerDao.createCustomer(newCustomer);
+		newCustomer.registerCustomer();
 	}
- 	
+	
+	/**
+	 * Gathers customer info for registration
+	 * @return a Customer with all data except id
+	 */
 	private static Customer enterCustomerData() {
 		
 		Customer newCustomer = new Customer();
 		Scanner keyboard = new Scanner(System.in);
 		System.out.println("\nCarefully enter data for a new customer!");
 		System.out.print("Customer ID: ");
-		newCustomer.setCustomerId(keyboard.nextInt());
-		keyboard.nextLine();
+		newCustomer.setCustomerId(keyboard.nextLine());
 		
 		System.out.print("\nFirst Name: ");
 		newCustomer.setFirstName(keyboard.nextLine());
@@ -53,28 +70,153 @@ public class Customer {
 		System.out.print("\nLast Name: ");
 		newCustomer.setLastName(keyboard.nextLine());
 		
-		System.out.println("\nPlease follow date format!");
-		System.out.print("Date of Birth (DD-MM-YYY): ");
-		newCustomer.setDOB(keyboard.nextLine());
+		System.out.println("\nPlease follow date format! (DD-MM-YYYY)");
+		System.out.print("Date of Birth: ");
+		newCustomer.setDateOfBirth(keyboard.nextLine());
 		
-		System.out.println("\nAdress: ");
-		newCustomer.setAdress(Adress.addAdress());
-		
+		System.out.println("\nAddress");
+		newCustomer.setAdress(Address.addAddress());		
 		System.out.println();
 		
 		return newCustomer;
 	}
 	
+	/**
+	 * Receives and sends variables to the method with database connection
+	 * @return int 1 if customer got saved to database.
+	 * 			int 0 if customer didn't got saved to database.
+	 */
+	private void registerCustomer() {
+		
+		int saved = 0;
+		saved = CustomerDao.createCustomer(this);
+		if (saved == 0) {
+			System.out.println("  Operation didn't complete with success!");
+		} else {
+			System.out.println("  We have a new customer!");
+		}
+	}
+	
+	/**
+	 * Validates every single info about a Customer, except address
+	 * @return True for a valid & ready for registration Customer
+	 * 			False for anything else
+	 */			
+	private boolean validateCustomer() {
+		
+		boolean checks = false;		
+		if (validateDateOfBirth(this.getDateOfBirth()))
+		{
+			if (validateId(this.getCustomerId()))
+			{
+				if ( validateUsername(this.getFirstName()) && validateUsername(this.getLastName()) )
+				{
+					checks = true;
+				} else {
+					System.out.println("\n   Invalid Names!");
+				}
+				
+			} else {
+				System.out.println("\n   Invalid ID!");
+			}
+			
+		} else {
+			System.out.println("\n   Invalid Date Of Birth!");
+		}
+		return checks;
+	}
+	/**
+	 * Validates a customer id to meet required form
+	 * @param customerId
+	 * @return	True for 13 digits
+	 * 			False for anything else
+	 */
+	private static boolean validateId(String customerId) {
+
+		if(customerId.length() == 13)
+		{
+			Pattern digit = Pattern.compile("[0-9]");
+
+			Matcher hasDigit = digit.matcher(customerId);
+
+			return hasDigit.find();
+
+		} else {
+			return false;
+		}
+	}
+		
+	/**
+	 * Validates a name to meet certain standards
+	 * @param name
+	 * @return
+	 * 		True for a name that begins with capital letter, and has no digits inside
+	 * 		False for anything else
+	 */
+	private static boolean validateUsername(String name) {
+
+		if(name.length()>=3)
+		{
+			Pattern UpperCase = Pattern.compile("^[A-Z]");
+			Pattern LowerCase = Pattern.compile("[a-z]");
+			Pattern digit = Pattern.compile("[0-9]");
+
+			Matcher hasUpperCase = UpperCase.matcher(name);
+			Matcher hasLowerCase = LowerCase.matcher(name);
+			Matcher hasDigit = digit.matcher(name);
+
+			return hasUpperCase.find() && hasLowerCase.find() && !hasDigit.find();
+
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Validates the format of a date of birth also checks for the age 18
+	 * @param dateOfBirth
+	 * @return  True for correct format (DD-MM-YYYY) and correct date numbers
+	 * 			False for anything else
+	 */
+	private static boolean validateDateOfBirth(String dateOfBirth) {
+
+		boolean checks = false;
+		if(dateOfBirth.length() == 10)
+		{
+			Pattern digit = Pattern.compile("[0-9]");
+			Pattern dashes = Pattern.compile("-");
+
+			Matcher hasDigit = digit.matcher(dateOfBirth);
+			Matcher hasDashes = dashes.matcher(dateOfBirth);
+
+			if ( hasDigit.find() && hasDashes.find() ) {
+				
+				String[] date = dateOfBirth.split("-");
+				if ( Integer.parseInt(date[0]) <= 31 ) {
+					if ( Integer.parseInt(date[1]) <= 12 ) {
+						if ( Integer.parseInt(date[2]) <= 2001 ) {
+							checks = true;							
+						}
+					}
+				}				
+			}
+			
+		} else {
+			checks = false;
+		}
+		return checks;
+	}
+
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getCustomerId() {
+	public String getCustomerId() {
 		return customerId;
 	}
-	public void setCustomerId(int customerId) {
+	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
 	}
 	public String getFirstName() {
@@ -89,16 +231,16 @@ public class Customer {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	public String getDOB() {
-		return DOB;
+	public String getDateOfBirth() {
+		return dateOfBirth;
 	}
-	public void setDOB(String DOB) {
-		this.DOB = DOB;
+	public void setDateOfBirth(String dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
 	}
-	public Adress getAdress() {
-		return adress;
+	public Address getAdress() {
+		return address;
 	}
-	public void setAdress(Adress adress) {
-		this.adress = adress;
+	public void setAdress(Address address) {
+		this.address = address;
 	}
 }

@@ -55,6 +55,7 @@ public class User {
 	}
 	public User(String username, String password, char isAdmin, String secretQuestion, String secretAnswer, char isActive) {
 
+		this.id = 0;
 		this.username = username;
 		this.password = password;
 		this.isAdmin = isAdmin;
@@ -71,22 +72,6 @@ public class User {
 		this.isActive = active;
 		this.secretQuestion = secretQuestion;
 		this.secretAnswer = secretAnswer;
-	}
-
-	/**
-	 * Receives and sends variables to the method with database connection
-	 * @return int 1 if user got saved to database.
-	 * 			int 0 if user didn't got saved to database.
-	 */
-	private void registerUser() {
-
-		int saved = 0;
-		saved = UserDao.adminSave(this.getUsername(), this.getPassword(), this.getIsAdmin(), this.getIsActive());
-		if (saved == 0) {
-			System.out.println("Save operation to database didn't complete successfully!");
-		} else {
-			System.out.println("We have a new user!");
-		}
 	}
 
 	/**
@@ -128,11 +113,28 @@ public class User {
 		User newUser = new User(user, pass, isAdmin, 'N');
 		return newUser;
 	}
+	
+	/**
+	 * Receives and sends variables to the method with database connection
+	 * @return int 1 if user got saved to database.
+	 * 			int 0 if user didn't got saved to database.
+	 */
+	private void registerUser() {
+
+		int saved = 0;
+		saved = UserDao.adminSave(this.getUsername(), this.getPassword(), this.getIsAdmin(), this.getIsActive());
+		if (saved == 0) {
+			System.out.println("Save operation to database didn't complete successfully!");
+		} else {
+			System.out.println("We have a new user!");
+		}
+	}
 
 	/**
 	 * Checks for pending login credentials integrity
 	 */
 	private boolean validateUser() {
+		
 		boolean ok = false;
 		boolean uniqueCheck = false;
 
@@ -305,6 +307,9 @@ public class User {
 		return this;
 	}
 
+	/**
+	 * Gathers info, then reset specific user to deactivated status.
+	 */
 	public static void resetUser() {
 
 		Scanner keyboard = new Scanner(System.in);
