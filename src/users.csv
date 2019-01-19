@@ -1,4 +1,3 @@
 "id";"username";"password";"isAdmin";"isActive";"secretQuestion";"secretAnswer"
-1;"Admin";"Admin@123";"Y";"N";"";""
-9;"Vasile";"V@s1lache";"N";"Y";"Asd";"as"
-10;"Marcel";"M@rc3l";"N";"Y";"Nu am ce";"face!"
+3;"Admin";"Admin@123";"Y";"N";"";""
+4;"Vasile";"Monday14";"N";"N";"";""

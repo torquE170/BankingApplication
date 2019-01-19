@@ -1,7 +1,2 @@
 "id";"customerId";"firstName";"lastName";"DOB";"adress"
-4;"123456";"Ollie";"Liver";"12-12-4512";"Str. Primaverii Nr. 1"
-5;"1234544";"Ulrich";"Streichs";"14-08-7894";"Str. Lacului Nr. 12"
-6;"12345678";"Sasha";"Dmitri";"29-09-1988";"Str. Parchetului Nr. 8"
-7;"1234567879456";"Jumbo";"Jet";"14-06-1978";"Str. Catargului Nr. 78"
-8;"123456788";"Long";"Address";"08-08-2008";"Str. Licoarei Nr. 69 Building Y Entrance 2C Ap. 17 Fl. 5 Details At the green wall"
-9;"1880829124253";"Oliver";"Queen";"29-08-1988";"Str. Pain Nr. 66"
+4;123456;"Ollie";"Liver";"12-12-4512";"Str. Primaverii Nr. 1"
