@@ -87,7 +87,8 @@ public class AppMenu {
 							// User Menu
 							do {
 								System.out.println("      Banking Menu\n");
-								System.out.println("  1 - Add a Customer\n");
+								System.out.println("  1 - Add a Customer");
+								System.out.println("  2 - Customer wants to...\n");
 								System.out.println("  0 - Back\n");								
 								System.out.print(">> ");
 								option = keyboard.nextInt();
@@ -95,6 +96,28 @@ public class AppMenu {
 								switch(option) {
 								case 1: {
 									Customer.addCustomer();
+									break;
+								}
+								case 2:{
+									do {
+										// Customer options
+										System.out.println("      Customer Actions\n");
+										System.out.println("  0 - Back\n");
+										System.out.print(">> ");
+										option = keyboard.nextInt();
+										keyboard.nextLine();
+										switch(option) {
+										case 0: {
+											option = -4;
+											break;
+										}
+										default: {
+											option = 0;
+											System.out.println("  Enter a valid option!");
+											break;
+										}
+										}
+									} while (option != -4);
 									break;
 								}
 								case 0: {

@@ -2,32 +2,23 @@ package resources;
 
 public class LoanAccount extends Account{
 
-	private int id;
 	private double depositAmount;
 	private String duration;
 	private double interest;
 	
 	public LoanAccount() {
 
-		this.id = 0;
 		this.depositAmount = 0;
 		this.duration = "";
 		this.interest = 0;
 	}
-	public LoanAccount(int id, double depositAmount, String duration, double interest) {
+	public LoanAccount(double depositAmount, String duration, double interest) {
 
-		this.id = id;
 		this.depositAmount = depositAmount;
 		this.duration = duration;
 		this.interest = interest;
 	}
 	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
 	public double getDepositAmount() {
 		return depositAmount;
 	}

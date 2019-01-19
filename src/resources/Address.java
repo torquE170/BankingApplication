@@ -1,6 +1,8 @@
 package resources;
 
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Address {
 
@@ -26,9 +28,11 @@ public class Address {
 
 		this.text = "Str. " + streetName + " Nr. " + Integer.toString(streetNumber);
 		if (!otherInfo.trim().equals("")) {
-			this.text += " Details " + otherInfo;
+			this.text += " Details: " + otherInfo;
 		}
-		
+		this.streetName = streetName;
+		this.streetNumber = streetNumber;
+		this.otherInfo = otherInfo;
 	}
 	public Address(String streetName, int streetNumber, String building, String entrance, int appartment, int floor, String otherInfo) {
 	
@@ -46,8 +50,8 @@ public class Address {
 	}
 	
 	/**
-	 * Calls all methods for a valid address gathering
-	 * @return
+	 * Calls all methods for a address gathering
+	 * @return A Address object
 	 */
 	public static Address addAddress() {
 		
@@ -98,6 +102,48 @@ public class Address {
 		return newAdress;
 	}
 	
+	/**
+	 * Validates a Address object to contain valid data
+	 * @return		True for a valid object.
+	 * 				False for anything else.
+	 */
+	public static boolean validateAddress(Address newAddress) {
+		
+		boolean checks = false;
+		if ( validateStreetName(newAddress.getStreetName()) && newAddress.getStreetNumber() > 0 )
+		{
+			checks = true;
+		} else {
+			System.out.println("   Address invalid!");
+		}
+		return checks;
+	}
+	
+	/**
+	 * Validates a street name
+	 * @param streetName
+	 * @return True for a street name starting with capital letter and no numbers
+	 * 			False for anything else
+	 */
+	private static boolean validateStreetName(String streetName) {
+
+		if(streetName.length()>=3)
+		{
+			Pattern UpperCase = Pattern.compile("[A-Z]");
+			Pattern LowerCase = Pattern.compile("[a-z]");
+			Pattern digit = Pattern.compile("[0-9]");
+
+			Matcher hasUpperCase = UpperCase.matcher(streetName);
+			Matcher hasLowerCase = LowerCase.matcher(streetName);
+			Matcher hasDigit = digit.matcher(streetName);
+
+			return hasUpperCase.find() && hasLowerCase.find() && !hasDigit.find();
+
+		} else {
+			return false;
+		}
+	}
+
 	public String getText() {
 		return text;
 	}

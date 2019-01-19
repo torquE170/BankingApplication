@@ -19,7 +19,7 @@ public class CustomerDao {
 			ps.setString(2, newCustomer.getFirstName());
 			ps.setString(3, newCustomer.getLastName());
 			ps.setString(4, newCustomer.getDateOfBirth());
-			ps.setString(5, newCustomer.getAdress().getText());
+			ps.setString(5, newCustomer.getAddress().getText());
 			status = ps.executeUpdate();
 			
 			ps.close();

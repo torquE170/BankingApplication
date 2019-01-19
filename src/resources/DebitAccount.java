@@ -2,7 +2,6 @@ package resources;
 
 public class DebitAccount extends Account{
 
-	private int id;
 	private double amountOriginal;
 	private double amountToBePaid;
 	private double currentAmount;
@@ -12,7 +11,6 @@ public class DebitAccount extends Account{
 	
 	public DebitAccount() {
 
-		this.id = 0;
 		this.amountOriginal = 0;
 		this.amountToBePaid = 0;
 		this.currentAmount = 0;
@@ -20,10 +18,9 @@ public class DebitAccount extends Account{
 		this.monthlyRate = 0;
 		this.interestRate = 0;
 	}
-	public DebitAccount(int id, double amountOriginal, double amountToBePaid,
+	public DebitAccount(double amountOriginal, double amountToBePaid,
 			double currentAmount, String duration, double monthlyRate, double interestRate) {
 
-		this.id = id;
 		this.amountOriginal = amountOriginal;
 		this.amountToBePaid = amountToBePaid;
 		this.currentAmount = currentAmount;
@@ -32,12 +29,8 @@ public class DebitAccount extends Account{
 		this.interestRate = interestRate;
 	}
 	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
+	
+
 	public double getAmountOriginal() {
 		return amountOriginal;
 	}

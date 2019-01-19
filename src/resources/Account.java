@@ -18,6 +18,7 @@ public class Account {
 		this.accountId = accountId;
 		this.customerId = customerId;
 	}
+	
 	public int getId() {
 		return id;
 	}

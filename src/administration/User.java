@@ -95,7 +95,7 @@ public class User {
 		String user, pass;
 		char isAdmin;
 		Scanner keyboard = new Scanner(System.in);
-		//		Console console = System.console();
+//		Console console = System.console();
 
 		System.out.println(" New user from:");
 		System.out.print(">> Username: ");
@@ -103,8 +103,8 @@ public class User {
 		user = user.trim();
 		
 		System.out.print(">> Password: ");
-		//		char[] text = console.readPassword();
-		//		pass = new String(text);
+//		char[] text = console.readPassword();
+//		pass = new String(text);
 		pass = keyboard.nextLine();
 		System.out.print(">> Admin: ");
 		isAdmin = keyboard.nextLine().charAt(0);

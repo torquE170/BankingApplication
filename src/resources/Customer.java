@@ -49,7 +49,9 @@ public class Customer {
 	public static void addCustomer() {
 		
 		Customer newCustomer = enterCustomerData();
-		newCustomer.registerCustomer();
+		if (newCustomer.validateCustomer()) {
+			newCustomer.registerCustomer();
+		}
 	}
 	
 	/**
@@ -75,7 +77,7 @@ public class Customer {
 		newCustomer.setDateOfBirth(keyboard.nextLine());
 		
 		System.out.println("\nAddress");
-		newCustomer.setAdress(Address.addAddress());		
+		newCustomer.setAddress(Address.addAddress());	
 		System.out.println();
 		
 		return newCustomer;
@@ -91,9 +93,9 @@ public class Customer {
 		int saved = 0;
 		saved = CustomerDao.createCustomer(this);
 		if (saved == 0) {
-			System.out.println("  Operation didn't complete with success!");
+			System.out.println("  Operation didn't complete with success!\n");
 		} else {
-			System.out.println("  We have a new customer!");
+			System.out.println("  We have a new customer!\n");
 		}
 	}
 	
@@ -111,20 +113,25 @@ public class Customer {
 			{
 				if ( validateUsername(this.getFirstName()) && validateUsername(this.getLastName()) )
 				{
-					checks = true;
+					if ( Address.validateAddress(this.getAddress()) )
+					{
+						checks = true;
+					}
+					
 				} else {
-					System.out.println("\n   Invalid Names!");
+					System.out.println("   Invalid Names!\n");
 				}
 				
 			} else {
-				System.out.println("\n   Invalid ID!");
+				System.out.println("   Invalid ID!\n");
 			}
 			
 		} else {
-			System.out.println("\n   Invalid Date Of Birth!");
+			System.out.println("   Invalid Date Of Birth!\n");
 		}
 		return checks;
 	}
+	
 	/**
 	 * Validates a customer id to meet required form
 	 * @param customerId
@@ -189,18 +196,18 @@ public class Customer {
 			Matcher hasDigit = digit.matcher(dateOfBirth);
 			Matcher hasDashes = dashes.matcher(dateOfBirth);
 
-			if ( hasDigit.find() && hasDashes.find() ) {
-				
+			if ( hasDigit.find() && hasDashes.find() )
+			{
 				String[] date = dateOfBirth.split("-");
 				if ( Integer.parseInt(date[0]) <= 31 ) {
 					if ( Integer.parseInt(date[1]) <= 12 ) {
 						if ( Integer.parseInt(date[2]) <= 2001 ) {
-							checks = true;							
+							checks = true;
 						}
 					}
-				}				
+				}
 			}
-			
+
 		} else {
 			checks = false;
 		}
@@ -237,10 +244,10 @@ public class Customer {
 	public void setDateOfBirth(String dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
-	public Address getAdress() {
+	public Address getAddress() {
 		return address;
 	}
-	public void setAdress(Address address) {
+	public void setAddress(Address address) {
 		this.address = address;
 	}
 }
