@@ -37,7 +37,7 @@ public class Address {
 	public Address(String streetName, int streetNumber, String building, String entrance, int appartment, int floor, String otherInfo) {
 	
 		this.text = "Str. " + streetName + " Nr. " + streetNumber + " Building " + building + ", Entrance " + entrance + ", Ap. " + appartment + " Fl. " + floor;
-		if (!otherInfo.equals("")) {
+		if (!otherInfo.trim().equals("")) {
 			this.text += " Details: " + otherInfo;
 		}
 		this.streetName = streetName;
@@ -65,40 +65,77 @@ public class Address {
 	 */
 	private static Address enterAdressData() {
 		
-		String streetName = "", otherInfo = "", building = "", entrance = "";
-		int streetNumber = 0, appartment = 0, floor = 0;
-		Address newAdress = new Address();
 		Scanner keyboard = new Scanner(System.in);
-		System.out.print("Street Name: ");
-		streetName = keyboard.nextLine();
-		
-		System.out.print("\nStreet Number: ");
-		streetNumber = keyboard.nextInt();
-		keyboard.nextLine();
+		Address newAdress = new Address();
+		int option = -1;
+		do {
+			System.out.println("  1 - Short Address (Street, Number and Details)");
+			System.out.println("  2 - Long Address (Street, Number, Building, Entrance, Floor and Details)\n");
+			System.out.print(">> ");
+			option = keyboard.nextInt();
+			keyboard.nextLine();
+			switch (option) {
+			case 1: {
+				// Short Address form
+				String streetName = "", otherInfo = "";
+				int streetNumber = 0;
+
+				System.out.print("Street Name: ");
+				streetName = keyboard.nextLine();
 				
-		System.out.print("\nBuilding Number: ");
-		building = keyboard.nextLine();
-		
-		System.out.print("\nEntrance Number: ");
-		entrance = keyboard.nextLine();
-		
-		System.out.print("\nAppartment Number: ");
-		appartment = keyboard.nextInt();
-		keyboard.nextLine();
-		
-		System.out.println("\n1st floor is ground floor!");
-		System.out.print("Floor: ");
-		floor = keyboard.nextInt();
-		keyboard.nextLine();
-		
-		System.out.print("Other Details: ");
-		otherInfo = keyboard.nextLine();
-		
-		if (appartment == 0) {
-			newAdress = new Address(streetName, streetNumber, otherInfo);
-		} else if (floor != 0) {
-			newAdress = new Address(streetName, streetNumber, building, entrance, appartment, floor, otherInfo);
-		}
+				System.out.print("\nStreet Number: ");
+				streetNumber = keyboard.nextInt();
+				keyboard.nextLine();
+				
+				System.out.println("Enter one space to pass");
+				System.out.print("Other Details: ");
+				otherInfo = keyboard.nextLine();
+				
+				newAdress = new Address(streetName, streetNumber, otherInfo);
+				option = -1;
+				break;
+			}
+			case 2: {
+				// Long Address form				
+				String streetName = "", otherInfo = "", building = "", entrance = "";
+				int streetNumber = 0, appartment = 0, floor = 0;
+
+				System.out.print("Street Name: ");
+				streetName = keyboard.nextLine();
+				
+				System.out.print("\nStreet Number: ");
+				streetNumber = keyboard.nextInt();
+				keyboard.nextLine();
+						
+				System.out.print("\nBuilding Number: ");
+				building = keyboard.nextLine();
+				
+				System.out.print("\nEntrance Number: ");
+				entrance = keyboard.nextLine();
+				
+				System.out.print("\nAppartment Number: ");
+				appartment = keyboard.nextInt();
+				keyboard.nextLine();
+				
+				System.out.println("\n1st floor is ground floor!");
+				System.out.print("Floor: ");
+				floor = keyboard.nextInt();
+				keyboard.nextLine();
+				
+				System.out.print("Other Details: ");
+				otherInfo = keyboard.nextLine();		
+				
+				newAdress = new Address(streetName, streetNumber, building, entrance, appartment, floor, otherInfo);
+				option = -1;
+				break;				
+			}
+			default: {
+				option = 0;
+				System.out.println("   Enter a valid option!");
+				break;
+			}
+			}
+		} while(option != -1);
 		return newAdress;
 	}
 	

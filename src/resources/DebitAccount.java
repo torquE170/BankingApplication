@@ -30,7 +30,7 @@ public class DebitAccount extends Account{
 	}
 	
 	
-
+	
 	public double getAmountOriginal() {
 		return amountOriginal;
 	}

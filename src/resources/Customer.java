@@ -106,20 +106,26 @@ public class Customer {
 	 */			
 	private boolean validateCustomer() {
 		
-		boolean checks = false;		
+		boolean checks = false;
 		if (validateDateOfBirth(this.getDateOfBirth()))
 		{
 			if (validateId(this.getCustomerId()))
 			{
-				if ( validateUsername(this.getFirstName()) && validateUsername(this.getLastName()) )
+				if (CustomerDao.uniqueUsername(this.getCustomerId()))
 				{
-					if ( Address.validateAddress(this.getAddress()) )
+					if ( validateUsername(this.getFirstName()) && validateUsername(this.getLastName()) )
 					{
-						checks = true;
+						if ( Address.validateAddress(this.getAddress()) )
+						{
+							checks = true;
+						}
+						
+					} else {
+						System.out.println("   Invalid Names!\n");
 					}
 					
 				} else {
-					System.out.println("   Invalid Names!\n");
+					System.out.println("   Another Customer is registered with this ID!\n");
 				}
 				
 			} else {

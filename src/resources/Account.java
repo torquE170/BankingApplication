@@ -3,20 +3,33 @@ package resources;
 public class Account {
 	
 	private int id;
-	private int accountId;
-	private int customerId;
+	private String accountId;
+	private String customerId;
 	
 	public Account() {
 		
 		this.id = 0;
-		this.accountId = 0;
-		this.customerId = 0;
+		this.accountId = "";
+		this.customerId = "";
 	}
-	public Account(int id, int accountId, int customerId) {
+	public Account(int id, String accountId, String customerId) {
 	
 		this.id = id;
 		this.accountId = accountId;
 		this.customerId = customerId;
+	}
+	
+	public String generateAccount() {
+		
+		int afterRo = (int)(Math.random() * 89 + 11);
+		int firstThree = (int)(Math.random() * 899 + 101);
+		int secondThree = (int)(Math.random() * 899 + 101);
+		int lastThree = (int)(Math.random() * 899 + 101);
+		int lastTwo = (int)(Math.random() * 89 + 11);
+		
+		String accountNumber = "RO" + Integer.toString(afterRo) + "EBAS420SV" + Integer.toString(firstThree) + Integer.toString(secondThree) + 
+																				Integer.toString(lastThree) + Integer.toString(lastTwo);
+		return accountNumber;
 	}
 	
 	public int getId() {
@@ -25,16 +38,16 @@ public class Account {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getAccountId() {
+	public String getAccountId() {
 		return accountId;
 	}
-	public void setAccountId(int accountId) {
+	public void setAccountId(String accountId) {
 		this.accountId = accountId;
 	}
-	public int getCustomerId() {
+	public String getCustomerId() {
 		return customerId;
 	}
-	public void setCustomerId(int customerId) {
+	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
 	}	
 }

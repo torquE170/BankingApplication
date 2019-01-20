@@ -194,6 +194,12 @@ public class UserDao {
 		return totalUsers;
 	}
 	
+	/**
+	 * Serves for activating a user
+	 * @param currentUser
+	 * @return 	1 for success
+	 *			0 for failure
+	 */
 	public static int updatePassword(User currentUser) {
 		
 		int status = 0;
@@ -249,6 +255,10 @@ public class UserDao {
 		return isUnique;
 	}
 	
+	/**
+	 * Counts current admins in the data base
+	 * @return A int of current admins
+	 */
 	public static int adminCount() {
 		
 		int counter = 0;
