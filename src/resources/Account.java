@@ -1,5 +1,7 @@
 package resources;
 
+import dbAccess.AccountDao;
+
 public class Account {
 	
 	private int id;
@@ -21,16 +23,25 @@ public class Account {
 	
 	public String generateAccount() {
 		
-		int afterRo = (int)(Math.random() * 89 + 11);
-		int firstThree = (int)(Math.random() * 899 + 101);
-		int secondThree = (int)(Math.random() * 899 + 101);
-		int lastThree = (int)(Math.random() * 899 + 101);
-		int lastTwo = (int)(Math.random() * 89 + 11);
-		
-		String accountNumber = "RO" + Integer.toString(afterRo) + "EBAS420SV" + Integer.toString(firstThree) + Integer.toString(secondThree) + 
-																				Integer.toString(lastThree) + Integer.toString(lastTwo);
+		String accountNumber = "";
+		boolean isUnique = false;		
+		do {
+			int afterRo = (int)(Math.random() * 89 + 11);
+			int firstThree = (int)(Math.random() * 899 + 101);
+			int secondThree = (int)(Math.random() * 899 + 101);
+			int lastThree = (int)(Math.random() * 899 + 101);
+			int lastTwo = (int)(Math.random() * 89 + 11);
+			
+			accountNumber = "RO" + Integer.toString(afterRo) + "EBAS420SV" + Integer.toString(firstThree) + Integer.toString(secondThree) + 
+																			 Integer.toString(lastThree) + Integer.toString(lastTwo);
+			if (AccountDao.uniqueAccount(accountNumber)) {
+				isUnique = true;
+			}
+		} while (!isUnique);
 		return accountNumber;
 	}
+	
+	// and here
 	
 	public int getId() {
 		return id;

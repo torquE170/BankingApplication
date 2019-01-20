@@ -10,8 +10,8 @@ public class AccountDao {
 	/**
 	 * Checks for account Id uniqueness 
 	 * @param accountId
-	 * @return	1 for unique account id
-	 * 			0 for finding a exact match
+	 * @return	True for unique account id
+	 * 			False for finding a exact match
 	 */
 	public static boolean uniqueAccount(String accountId) {
 		
