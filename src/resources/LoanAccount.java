@@ -2,28 +2,54 @@ package resources;
 
 public class LoanAccount extends Account{
 
-	private double depositAmount;
+	private double amountOriginal;
+	private double amountToBePaid;
+	private double currentAmount;
 	private String duration;
-	private double interest;
+	private double monthlyRate;
+	private double interestRate;
 	
 	public LoanAccount() {
 
-		this.depositAmount = 0;
+		super();
+		this.amountOriginal = 0;
+		this.amountToBePaid = 0;
+		this.currentAmount = 0;
 		this.duration = "";
-		this.interest = 0;
+		this.monthlyRate = 0;
+		this.interestRate = 0;
 	}
-	public LoanAccount(double depositAmount, String duration, double interest) {
+	public LoanAccount(String accountId, String customerId, double amountOriginal, double amountToBePaid,
+			double currentAmount, String duration, double monthlyRate, double interestRate) {
 
-		this.depositAmount = depositAmount;
+		super(accountId, customerId);
+		this.amountOriginal = amountOriginal;
+		this.amountToBePaid = amountToBePaid;
+		this.currentAmount = currentAmount;
 		this.duration = duration;
-		this.interest = interest;
+		this.monthlyRate = monthlyRate;
+		this.interestRate = interestRate;
 	}
 	
-	public double getDepositAmount() {
-		return depositAmount;
+	
+	
+	public double getAmountOriginal() {
+		return amountOriginal;
 	}
-	public void setDepositAmount(double depositAmount) {
-		this.depositAmount = depositAmount;
+	public void setAmountOriginal(double amountOriginal) {
+		this.amountOriginal = amountOriginal;
+	}
+	public double getAmountToBePaid() {
+		return amountToBePaid;
+	}
+	public void setAmountToBePaid(double amountToBePaid) {
+		this.amountToBePaid = amountToBePaid;
+	}
+	public double getCurrentAmount() {
+		return currentAmount;
+	}
+	public void setCurrentAmount(double currentAmount) {
+		this.currentAmount = currentAmount;
 	}
 	public String getDuration() {
 		return duration;
@@ -31,10 +57,16 @@ public class LoanAccount extends Account{
 	public void setDuration(String duration) {
 		this.duration = duration;
 	}
-	public double getInterest() {
-		return interest;
+	public double getMonthlyRate() {
+		return monthlyRate;
 	}
-	public void setInterest(double interest) {
-		this.interest = interest;
+	public void setMonthlyRate(double monthlyRate) {
+		this.monthlyRate = monthlyRate;
+	}
+	public double getInterestRate() {
+		return interestRate;
+	}
+	public void setInterestRate(double interestRate) {
+		this.interestRate = interestRate;
 	}
 }

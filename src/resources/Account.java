@@ -14,6 +14,12 @@ public class Account {
 		this.accountId = "";
 		this.customerId = "";
 	}
+	public Account(String accountId, String customerId) {
+		
+		this.id = 0;
+		this.accountId = accountId;
+		this.customerId = customerId;
+	}
 	public Account(int id, String accountId, String customerId) {
 	
 		this.id = id;

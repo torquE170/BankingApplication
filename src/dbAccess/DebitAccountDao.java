@@ -4,11 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import resources.DebitAccount;
+import resources.LoanAccount;
 
 public class DebitAccountDao {
 
-	public static int saveAccount(DebitAccount newAccount) {
+	public static int saveAccount(LoanAccount newAccount) {
 		
 		int status = 0;
 		try {
