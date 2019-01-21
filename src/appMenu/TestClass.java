@@ -1,8 +1,10 @@
 package appMenu;
 
+import java.util.Date;
 import java.util.Scanner;
-
+import dbAccess.DebitAccountDao;
 import resources.Account;
+import resources.DebitAccount;
 
 public class TestClass {
 
@@ -10,10 +12,9 @@ public class TestClass {
 		
 		Scanner keyboard = new Scanner(System.in);
 		
-		Account myAccount = new Account();
-		myAccount.setAccountId(myAccount.generateAccount());
-		System.out.println("Account: " + myAccount.getAccountId());
-		
+		DebitAccount myAccount = new DebitAccount("AID", "ID", 16, 15, 14, 14, new Date());
+		DebitAccountDao.saveAccount(myAccount);
+	
 		keyboard.close();
 	}
 

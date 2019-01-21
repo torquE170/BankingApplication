@@ -7,6 +7,7 @@ import administration.Login;
 import administration.User;
 import dbAccess.UserDao;
 import resources.Customer;
+import resources.DebitAccount;
 
 public class AppMenu {
 
@@ -102,11 +103,16 @@ public class AppMenu {
 									do {
 										// Customer options
 										System.out.println("      Customer Actions\n");
+										System.out.println("  1 - Add Debit Account\n");
 										System.out.println("  0 - Back\n");
 										System.out.print(">> ");
 										option = keyboard.nextInt();
 										keyboard.nextLine();
 										switch(option) {
+										case 1: {
+											DebitAccount.addAccount();
+											break;
+										}
 										case 0: {
 											option = -4;
 											break;

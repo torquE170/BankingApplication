@@ -19,7 +19,7 @@ public class AccountDao {
 		String id = "";
 		try {
 			Connection con = DB.getConnection();
-			PreparedStatement ps = con.prepareStatement("SELECT * FROM customers WHERE accountId = ?");
+			PreparedStatement ps = con.prepareStatement("SELECT * FROM debit_accounts WHERE accountId = ?");
 			ps.setString(1, accountId);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {

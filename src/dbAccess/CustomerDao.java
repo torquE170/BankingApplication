@@ -21,7 +21,7 @@ public class CustomerDao {
 		try {
 			
 			Connection con = DB.getConnection();
-			PreparedStatement ps = con.prepareStatement("INSERT INTO customers (customerId, firstName, lastName, DOB, adress) VALUES(?, ?, ?, ?, ?)");
+			PreparedStatement ps = con.prepareStatement("INSERT INTO customers (customerId, firstName, lastName, dateOfBirth, address) VALUES(?, ?, ?, ?, ?)");
 			ps.setString(1, newCustomer.getCustomerId());
 			ps.setString(2, newCustomer.getFirstName());
 			ps.setString(3, newCustomer.getLastName());
@@ -72,18 +72,16 @@ public class CustomerDao {
 	
 	/**
 	 * Gets a customer from database by his full name
-	 * @param firstName
-	 * @param lastName
+	 * @param customerId
 	 * @return A customer object with info from database
 	 */
-	public static Customer retrieveCustomer(String firstName, String lastName) {
+	public static Customer retrieveCustomer(String customerId) {
 		
 		Customer oneCustomer = new Customer();
 		try {
 			Connection con = DB.getConnection();
-			PreparedStatement ps = con.prepareStatement("SELECT * FROM customers WHERE firstName = ? AND lastName = ?");
-			ps.setString(1, firstName);
-			ps.setString(2, lastName);
+			PreparedStatement ps = con.prepareStatement("SELECT * FROM customers WHERE customerId = ?");
+			ps.setString(1, customerId);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
 				oneCustomer.setId(rs.getInt("id"));

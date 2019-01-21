@@ -1,28 +1,41 @@
 package resources;
 
+import java.util.Date;
 import java.util.Scanner;
 
+import dbAccess.CustomerDao;
 import dbAccess.DebitAccountDao;
 
 public class DebitAccount extends Account{
 
 	private double depositAmount;
-	private String duration;
+	private int duration;
 	private double interest;
+	private double amountAfterInterest;
+	private Date created;
 	
 	public DebitAccount() {
 
 		super();
 		this.depositAmount = 0;
-		this.duration = "";
+		this.duration = 0;
 		this.interest = 0;
+		this.amountAfterInterest = 0;
+		this.created = new Date();
 	}
-	public DebitAccount(String accountId, String customerId, double depositAmount, String duration, double interest) {
+	public DebitAccount(String accountId, String customerId, double depositAmount, int duration, double interest,
+			double amountAfterInterest, Date created) {
 
 		super(accountId, customerId);
 		this.depositAmount = depositAmount;
 		this.duration = duration;
 		this.interest = interest;
+		this.amountAfterInterest = amountAfterInterest;
+		this.created = created;
+	}
+	
+	public static void extractMoney() {
+		
 	}
 	
 	public static void addAccount() {
@@ -41,6 +54,15 @@ public class DebitAccount extends Account{
 	private DebitAccount enterAccountData() {
 		
 		Scanner keyboard = new Scanner(System.in);
+		Customer oneCustomer = new Customer();
+		
+		// Recognize customer
+		String customerId = "";
+		System.out.println("   Check if customer is in system!");
+		System.out.print("   Customer ID: ");
+		customerId = keyboard.nextLine();
+		
+		oneCustomer = CustomerDao.retrieveCustomer(customerId);		
 		
 		// Deposit or no, menu
 		int option = -1;
@@ -58,10 +80,13 @@ public class DebitAccount extends Account{
 				keyboard.nextLine();
 				
 				System.out.println("\n   How long you going to store this money? ");
-				this.setDuration(keyboard.nextLine());
+				this.setDuration(keyboard.nextInt());
+				keyboard.nextLine();
 				
-				this.setInterest(2.18);
+				this.setInterest(5);
 				
+				this.setAmountAfterInterest( this.getDepositAmount() + ( this.getDepositAmount() * (this.getInterest() / 100) ) * this.getDuration() );
+				option = -1;				
 				break;
 			}
 			case 2: {
@@ -75,6 +100,8 @@ public class DebitAccount extends Account{
 			}
 			}
 		} while(option != -1);
+		this.setCustomerId(oneCustomer.getCustomerId());
+		this.setAccountId(this.generateAccount());
 		
 		return this;
 	}
@@ -85,10 +112,10 @@ public class DebitAccount extends Account{
 	public void setDepositAmount(double depositAmount) {
 		this.depositAmount = depositAmount;
 	}
-	public String getDuration() {
+	public int getDuration() {
 		return duration;
 	}
-	public void setDuration(String duration) {
+	public void setDuration(int duration) {
 		this.duration = duration;
 	}
 	public double getInterest() {
@@ -96,5 +123,17 @@ public class DebitAccount extends Account{
 	}
 	public void setInterest(double interest) {
 		this.interest = interest;
+	}
+	public double getAmountAfterInterest() {
+		return amountAfterInterest;
+	}
+	public void setAmountAfterInterest(double amountAfterInterest) {
+		this.amountAfterInterest = amountAfterInterest;
+	}
+	public Date getCreated() {
+		return created;
+	}
+	public void setCreated(Date created) {
+		this.created = created;
 	}
 }

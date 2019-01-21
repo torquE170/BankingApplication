@@ -48,39 +48,45 @@ public class Customer {
 	 */
 	public static void addCustomer() {
 		
-		Customer newCustomer = enterCustomerData();
-		if (newCustomer.validateCustomer()) {
-			newCustomer.registerCustomer();
-		}
+		Scanner keyboard = new Scanner(System.in);
+		Customer newCustomer = new Customer();
+		System.out.print("Customer ID: ");
+		newCustomer.setCustomerId(keyboard.nextLine());
+		if (CustomerDao.uniqueUsername(newCustomer.getCustomerId())) {
+			
+			newCustomer = newCustomer.enterCustomerData();
+			if (newCustomer.validateCustomer()) {
+				newCustomer.registerCustomer();
+			}
+		} else {
+			System.out.println("   CNP already in system!\n");
+		}		
 	}
 	
 	/**
 	 * Gathers customer info for registration
 	 * @return a Customer with all data except id
 	 */
-	private static Customer enterCustomerData() {
+	private Customer enterCustomerData() {
 		
-		Customer newCustomer = new Customer();
+		
 		Scanner keyboard = new Scanner(System.in);
-		System.out.println("\nCarefully enter data for a new customer!");
-		System.out.print("Customer ID: ");
-		newCustomer.setCustomerId(keyboard.nextLine());
 		
 		System.out.print("\nFirst Name: ");
-		newCustomer.setFirstName(keyboard.nextLine());
+		this.setFirstName(keyboard.nextLine());
 		
 		System.out.print("\nLast Name: ");
-		newCustomer.setLastName(keyboard.nextLine());
+		this.setLastName(keyboard.nextLine());
 		
 		System.out.println("\nPlease follow date format! (DD-MM-YYYY)");
 		System.out.print("Date of Birth: ");
-		newCustomer.setDateOfBirth(keyboard.nextLine());
+		this.setDateOfBirth(keyboard.nextLine());
 		
 		System.out.println("\nAddress");
-		newCustomer.setAddress(Address.addAddress());	
+		this.setAddress(Address.addAddress());	
 		System.out.println();
 		
-		return newCustomer;
+		return this;
 	}
 	
 	/**
