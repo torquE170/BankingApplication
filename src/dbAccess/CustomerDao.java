@@ -69,4 +69,37 @@ public class CustomerDao {
 		}
 		return isUnique;
 	}
+	
+	/**
+	 * Gets a customer from database by his full name
+	 * @param firstName
+	 * @param lastName
+	 * @return A customer object with info from database
+	 */
+	public static Customer retrieveCustomer(String firstName, String lastName) {
+		
+		Customer oneCustomer = new Customer();
+		try {
+			Connection con = DB.getConnection();
+			PreparedStatement ps = con.prepareStatement("SELECT * FROM customers WHERE firstName = ? AND lastName = ?");
+			ps.setString(1, firstName);
+			ps.setString(2, lastName);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				oneCustomer.setId(rs.getInt("id"));
+				oneCustomer.setCustomerId(rs.getString("customerId"));
+				oneCustomer.setFirstName(rs.getString("firstName"));
+				oneCustomer.setLastName(rs.getString("lastName"));
+				oneCustomer.setDateOfBirth(rs.getString("dateOfBirth"));
+				oneCustomer.getAddress().setText(rs.getString("address"));
+			}
+			
+			rs.close();
+			ps.close();
+			con.close();
+		} catch (SQLException e) {
+			System.out.println(e);
+		}		
+		return oneCustomer;
+	}
 }
