@@ -2,11 +2,10 @@ package resources;
 
 import java.util.Date;
 import java.util.Scanner;
-
 import dbAccess.CustomerDao;
 import dbAccess.DebitAccountDao;
 
-public class DebitAccount extends Account{
+public class DebitAccount extends Account {
 
 	private double depositAmount;
 	private int duration;
@@ -36,6 +35,7 @@ public class DebitAccount extends Account{
 	
 	public static void extractMoney() {
 		
+		// write here
 	}
 	
 	public static void addAccount() {
@@ -55,6 +55,7 @@ public class DebitAccount extends Account{
 		
 		Scanner keyboard = new Scanner(System.in);
 		Customer oneCustomer = new Customer();
+		oneCustomer.setId(0);
 		
 		// Recognize customer
 		String customerId = "";
@@ -62,47 +63,52 @@ public class DebitAccount extends Account{
 		System.out.print("   Customer ID: ");
 		customerId = keyboard.nextLine();
 		
-		oneCustomer = CustomerDao.retrieveCustomer(customerId);		
+		oneCustomer = CustomerDao.retrieveCustomer(customerId);
 		
-		// Deposit or no, menu
-		int option = -1;
-		do {
-			System.out.println("\n   Make initial deposit?");
-			System.out.println("   1 - Yes");
-			System.out.println("   2 - No");
-			System.out.print(">> ");
-			option = keyboard.nextInt();
-			keyboard.nextLine();
-			switch (option) {
-			case 1: {
-				System.out.print("\n   Amount to deposit: ");
-				this.setDepositAmount(keyboard.nextDouble());
-				keyboard.nextLine();
-				
-				System.out.println("\n   How long you going to store this money? ");
-				this.setDuration(keyboard.nextInt());
-				keyboard.nextLine();
-				
-				this.setInterest(5);
-				
-				this.setAmountAfterInterest( this.getDepositAmount() + ( this.getDepositAmount() * (this.getInterest() / 100) ) * this.getDuration() );
-				option = -1;				
-				break;
-			}
-			case 2: {
-				this.setDepositAmount(0);
-				option = -1;
-				break;
-			}
-			default: {
-				option = 0;
-				System.out.println("   Enter a valid option!");
-			}
-			}
-		} while(option != -1);
-		this.setCustomerId(oneCustomer.getCustomerId());
-		this.setAccountId(this.generateAccount());
+		if (oneCustomer.getId() != 0) {
 		
+			// Deposit or no, menu
+			int option = -1;
+			do {
+				System.out.println("\n   Make initial deposit?");
+				System.out.println("   1 - Yes");
+				System.out.println("   2 - No");
+				System.out.print(">> ");
+				option = keyboard.nextInt();
+				keyboard.nextLine();
+				switch (option) {
+				case 1: {
+					System.out.print("\n   Amount to deposit: ");
+					this.setDepositAmount(keyboard.nextDouble());
+					keyboard.nextLine();
+					
+					System.out.print("\n   How long you going to store this money? ");
+					this.setDuration(keyboard.nextInt());
+					keyboard.nextLine();
+					
+					this.setInterest(5);
+					
+					this.setAmountAfterInterest( this.getDepositAmount() + ( this.getDepositAmount() * (this.getInterest() / 100) ) * this.getDuration() );
+					option = -1;				
+					break;
+				}
+				case 2: {
+					this.setDepositAmount(0);
+					option = -1;
+					break;
+				}
+				default: {
+					option = 0;
+					System.out.println("   Enter a valid option!");
+				}
+				}
+			} while(option != -1);
+			this.setCustomerId(oneCustomer.getCustomerId());
+			this.setAccountId(this.generateAccount());
+		} else {
+			
+			System.out.println(" Customer not in system!");
+		}
 		return this;
 	}
 	

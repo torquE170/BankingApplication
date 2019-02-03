@@ -1,11 +1,16 @@
 package resources;
 
+import java.util.Scanner;
+
+import dbAccess.CustomerDao;
+import dbAccess.LoanAccountDao;
+
 public class LoanAccount extends Account{
 
 	private double amountOriginal;
 	private double amountToBePaid;
 	private double currentAmount;
-	private String duration;
+	private int duration;
 	private double monthlyRate;
 	private double interestRate;
 	
@@ -15,12 +20,12 @@ public class LoanAccount extends Account{
 		this.amountOriginal = 0;
 		this.amountToBePaid = 0;
 		this.currentAmount = 0;
-		this.duration = "";
+		this.duration = 0;
 		this.monthlyRate = 0;
 		this.interestRate = 0;
 	}
 	public LoanAccount(String accountId, String customerId, double amountOriginal, double amountToBePaid,
-			double currentAmount, String duration, double monthlyRate, double interestRate) {
+			double currentAmount, int duration, double monthlyRate, double interestRate) {
 
 		super(accountId, customerId);
 		this.amountOriginal = amountOriginal;
@@ -31,7 +36,52 @@ public class LoanAccount extends Account{
 		this.interestRate = interestRate;
 	}
 	
+	public static void addAccount() {
+		
+		int saved = 0;
+		LoanAccount newAccount = new LoanAccount();
+		newAccount.enterAccountData();
+		saved = LoanAccountDao.saveAccount(newAccount);
+		if (saved == 1) {
+			System.out.println("   We have a new account!");
+		} else {
+			System.out.println("   Something went wrong!");
+		}
+	}
 	
+	private LoanAccount enterAccountData() {
+		
+		Scanner keyboard = new Scanner(System.in);
+		Customer oneCustomer = new Customer();
+
+		// Recognize customer
+		String customerId = "";
+		System.out.println("   Check if customer is in system!");
+		System.out.print("   Customer ID: ");
+		customerId = keyboard.nextLine();
+		
+		oneCustomer = CustomerDao.retrieveCustomer(customerId);
+		
+		if ( oneCustomer.getId() != 0) {
+			
+			System.out.print(" Amount to be loaned: ");
+			this.setAmountOriginal(keyboard.nextDouble());
+			keyboard.nextLine();
+			
+			System.out.print("  Duration of the loan: ");
+			this.setDuration(keyboard.nextInt());
+			keyboard.nextLine();
+			
+			this.setMonthlyRate(2.5);
+			this.setInterestRate(5);
+			
+			this.setAmountToBePaid( this.getAmountOriginal() + ( this.getAmountOriginal() * (this.getInterestRate() / 100) ) * this.getDuration() );
+		}
+		this.setCustomerId(oneCustomer.getCustomerId());
+		this.setAccountId(this.generateAccount());
+		
+		return this;
+	}
 	
 	public double getAmountOriginal() {
 		return amountOriginal;
@@ -51,10 +101,10 @@ public class LoanAccount extends Account{
 	public void setCurrentAmount(double currentAmount) {
 		this.currentAmount = currentAmount;
 	}
-	public String getDuration() {
+	public int getDuration() {
 		return duration;
 	}
-	public void setDuration(String duration) {
+	public void setDuration(int duration) {
 		this.duration = duration;
 	}
 	public double getMonthlyRate() {

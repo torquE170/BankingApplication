@@ -91,13 +91,13 @@ public class CustomerDao {
 				oneCustomer.setDateOfBirth(rs.getString("dateOfBirth"));
 				oneCustomer.getAddress().setText(rs.getString("address"));
 			}
-			
+		
 			rs.close();
 			ps.close();
 			con.close();
 		} catch (SQLException e) {
 			System.out.println(e);
-		}		
+		}
 		return oneCustomer;
 	}
 }

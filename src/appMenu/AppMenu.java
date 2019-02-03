@@ -8,6 +8,7 @@ import administration.User;
 import dbAccess.UserDao;
 import resources.Customer;
 import resources.DebitAccount;
+import resources.LoanAccount;
 
 public class AppMenu {
 
@@ -103,15 +104,71 @@ public class AppMenu {
 									do {
 										// Customer options
 										System.out.println("      Customer Actions\n");
-										System.out.println("  1 - Add Debit Account\n");
+										System.out.println("  1 - Debit Actions");
+										System.out.println("  2 - Loan Actions\n");
 										System.out.println("  0 - Back\n");
 										System.out.print(">> ");
 										option = keyboard.nextInt();
 										keyboard.nextLine();
 										switch(option) {
 										case 1: {
-											DebitAccount.addAccount();
+											
+											do {
+												// Debit Menu
+												System.out.println("      Debit Menu\n");
+												System.out.println("  1 - New Account");
+												System.out.println("  2 - Deposit money");
+												System.out.println("  3 - Withdraw money\n");
+												System.out.println("  0 - Back\n");
+												System.out.print(">> ");
+												option = keyboard.nextInt();
+												keyboard.nextLine();
+												switch (option) {
+												case 1: {
+													DebitAccount.addAccount();
+													break;
+												}
+												case 0: {
+													option = -5;
+													break;
+												}
+												default: {
+													option = 0;
+													System.out.println("  Enter a valid option!");
+													break;
+												}
+												}
+											} while (option != -5);
 											break;
+										}
+										case 2: {
+											do {
+												// Debit Menu
+												System.out.println("      Loan Account Menu\n");
+												System.out.println("  1 - New Account");
+												System.out.println("  2 - Option");
+												System.out.println("  3 - Options\n");
+												System.out.println("  0 - Back\n");
+												System.out.print(">> ");
+												option = keyboard.nextInt();
+												keyboard.nextLine();
+												switch (option) {
+												case 1: {
+													LoanAccount.addAccount();
+													break;
+												}
+												case 0: {
+													option = -6;
+													break;
+												}
+												default: {
+													option = 0;
+													System.out.println("  Enter a valid option!");
+													break;
+												}
+												}
+											} while (option != -6);
+											break;											
 										}
 										case 0: {
 											option = -4;

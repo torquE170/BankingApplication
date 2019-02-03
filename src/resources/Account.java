@@ -1,5 +1,7 @@
 package resources;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import dbAccess.AccountDao;
 
 public class Account {
@@ -33,6 +35,7 @@ public class Account {
 		boolean isUnique = false;		
 		do {
 			int afterRo = (int)(Math.random() * 89 + 11);
+//			int afterRo = ThreadLocalRandom.current().nextInt(10, 99);
 			int firstThree = (int)(Math.random() * 899 + 101);
 			int secondThree = (int)(Math.random() * 899 + 101);
 			int lastThree = (int)(Math.random() * 899 + 101);

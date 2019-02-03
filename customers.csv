@@ -1,4 +1,4 @@
-"id";"customerId";"firstName";"lastName";"DOB";"adress"
+"id";"customerId";"firstName";"lastName";"dateOfBirth";"address"
 12;"2880929334245";"Laura";"Malique";"29-09-1988";"Str. Black Nr. 66"
 13;"2880818234523";"Monica";"Balique";"18-08-1988";"Str. Rabbit Hole Nr. 16"
 16;"1880715234523";"Galdric";"Starman";"15-07-1988";"Str. Waterways Nr. 37 Building Y, Entrance 2C, Ap. 12 Fl. 3"

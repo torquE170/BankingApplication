@@ -1,1 +1,2 @@
-"id";"accountId";"customerId";"depositAmount";"duration";"interest"
+"id";"accountId";"customerId";"depositAmount";"duration";"interest";"amountAfterInterest";"created"
+1;"RO85EBAS420SV14483815146";"1880715234523";2800.0;48;5.0;9520.0;"2019-02-03"
